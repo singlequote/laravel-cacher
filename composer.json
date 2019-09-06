@@ -1,0 +1,56 @@
+{
+    "name": "singlequote/laravel-cacher",
+    "description": "A powerfull cacher based on laravels file cache driver",
+    "keywords": [
+        "cacher",
+        "cache",
+        "laravel",
+        "tags"
+    ],
+    "homepage": "https://github.com/singlequote/laravel-cacher",
+    "license": "MIT",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "Wim Pruiksma",
+            "email": "wim@quotec.nl",
+            "homepage": "https://quotec.nl/",
+            "role": "SEO"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "laravel/framework": "5.*"
+    },
+    "require-dev": {
+        
+    },
+    "autoload": {
+        "psr-4": {
+            "SingleQuote\\Cacher\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SingleQuote\\Cacher\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SingleQuote\\Cacher\\CacherServiceProvider"
+            ],
+            "aliases": {
+                "FileManager": "SingleQuote\\Cacher\\CacherFacade"
+            }
+        }
+    }
+}
