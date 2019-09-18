@@ -12,10 +12,12 @@ trait Cacher
      * @param int $ttl | default 1 week
      * @return \Illuminate\Contracts\Cache\Repository
      */
-    public function scopeRemember(Builder $query, int $ttl = 86400*7)
+    public function scopeRemember(Builder $builder, int $ttl = 86400*7)
     {
-        return Cache::remember(md5($query->toSql()), $ttl, function() use($query){
-            return $query->get();
+        $query = str_replace(array('?'), array('\'%s\''), $builder->toSql());
+        $query = vsprintf($query, $builder->getBindings());
+        return Cache::remember(md5($query), $ttl, function() use($builder){
+            return $builder->get();
         });
     }
     
@@ -24,10 +26,12 @@ trait Cacher
      * @param type $query
      * @return \Illuminate\Contracts\Cache\Repository
      */
-    public function scopeRememberForever(Builder $query)
+    public function scopeRememberForever(Builder $builder)
     {
-        return Cache::rememberForever(md5($query->toSql()), function() use($query){
-            return $query->get();
+        $query = str_replace(array('?'), array('\'%s\''), $builder->toSql());
+        $query = vsprintf($query, $builder->getBindings());
+        return Cache::rememberForever(md5($query), function() use($builder){
+            return $builder->get();
         });
     }
 }
