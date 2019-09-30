@@ -47,6 +47,18 @@ trait Cacher
     }
     
     /**
+     * 
+     * @param \Illuminate\Database\Query\Builder $builder
+     * @return \Illuminate\Contracts\Cache\Repository
+     */
+    public function scopeFindAndRememberForever(Builder $builder, $find)
+    {
+        return Cache::rememberForever($this->prefix($builder), function() use($builder, $find){
+            return $builder->find($find);
+        });
+    }
+    
+    /**
      * Set the prefix for the cacher
      * 
      * @param Builder $builder
