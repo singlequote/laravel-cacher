@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait Cacher
 {
+    protected $prefix;
+    
     /**
      * 
      * @param \Illuminate\Database\Query\Builder $builder
@@ -14,9 +16,19 @@ trait Cacher
      */
     public function scopeRemember(Builder $builder, int $ttl = 86400*7)
     {
-        $queryString = str_replace(array('?'), array('\'%s\''), $builder->toSql());
-        $query = vsprintf($queryString, $builder->getBindings());
-        return Cache::remember(md5($query), $ttl, function() use($builder){
+        return Cache::remember($this->prefix($builder), $ttl, function() use($builder){
+            return $builder->get();
+        });
+    }
+        
+    /**
+     * 
+     * @param \Illuminate\Database\Query\Builder $builder
+     * @return \Illuminate\Contracts\Cache\Repository
+     */
+    public function scopeRememberForever(Builder $builder)
+    {
+        return Cache::rememberForever($this->prefix($builder), function() use($builder){
             return $builder->get();
         });
     }
@@ -29,24 +41,40 @@ trait Cacher
      */
     public function scopeFindAndRemember(Builder $builder, $find, int $ttl = 86400*7)
     {
-        $queryString = str_replace(array('?'), array('\'%s\''), $builder->toSql());
-        $query = vsprintf($queryString, $builder->getBindings());
-        return Cache::remember(md5($query), $ttl, function() use($builder, $find){
+        return Cache::remember($this->prefix($builder), $ttl, function() use($builder, $find){
             return $builder->find($find);
         });
     }
     
     /**
+     * Set the prefix for the cacher
+     * 
+     * @param Builder $builder
+     * @param string $prefix
+     * @return Builder
+     */
+    public function scopePrefix(Builder $builder, string $prefix)
+    {
+        $this->prefix = $prefix;
+        
+        return $builder;
+    }
+    
+    /**
+     * Get the prefix for the cache file
      * 
      * @param \Illuminate\Database\Query\Builder $builder
-     * @return \Illuminate\Contracts\Cache\Repository
+     * @return string
      */
-    public function scopeRememberForever(Builder $builder)
+    private function prefix(Builder $builder) : string
     {
+        if($this->prefix){
+            return $this->prefix;
+        }
+        
         $queryString = str_replace(array('?'), array('\'%s\''), $builder->toSql());
-        $query = vsprintf($queryString, $builder->getBindings());
-        return Cache::rememberForever(md5($query), function() use($builder){
-            return $builder->get();
-        });
+        
+        return md5(vsprintf($queryString, $builder->getBindings()));
     }
+
 }
