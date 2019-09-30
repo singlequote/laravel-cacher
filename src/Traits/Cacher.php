@@ -59,6 +59,31 @@ trait Cacher
     }
     
     /**
+     * 
+     * @param \Illuminate\Database\Query\Builder $builder
+     * @param int $ttl | default 1 week
+     * @return \Illuminate\Contracts\Cache\Repository
+     */
+    public function scopeFirstAndRemember(Builder $builder, $find, int $ttl = 86400*7)
+    {
+        return Cache::remember($this->prefix($builder), $ttl, function() use($builder, $find){
+            return $builder->first($find);
+        });
+    }
+        
+    /**
+     * 
+     * @param \Illuminate\Database\Query\Builder $builder
+     * @return \Illuminate\Contracts\Cache\Repository
+     */
+    public function scopeFirstAndRememberForever(Builder $builder, $find)
+    {
+        return Cache::rememberForever($this->prefix($builder), function() use($builder, $find){
+            return $builder->first($find);
+        });
+    }
+    
+    /**
      * Set the prefix for the cacher
      * 
      * @param Builder $builder
