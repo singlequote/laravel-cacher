@@ -11,7 +11,7 @@ trait Cacher
     /**
      * 
      * @param \Illuminate\Database\Query\Builder $builder
-     * @param int $ttl | default 1 week
+     * @param int                                $ttl | default 1 week
      * @return \Illuminate\Contracts\Cache\Repository
      */
     public function scopeRemember(Builder $builder, int $ttl = 86400*7)
@@ -36,7 +36,8 @@ trait Cacher
     /**
      * 
      * @param \Illuminate\Database\Query\Builder $builder
-     * @param int $ttl | default 1 week
+     * @param mixed                              $find
+     * @param int                                $ttl | default 1 week
      * @return \Illuminate\Contracts\Cache\Repository
      */
     public function scopeFindAndRemember(Builder $builder, $find, int $ttl = 86400*7)
@@ -49,6 +50,7 @@ trait Cacher
     /**
      * 
      * @param \Illuminate\Database\Query\Builder $builder
+     * @param mixed                              $find
      * @return \Illuminate\Contracts\Cache\Repository
      */
     public function scopeFindAndRememberForever(Builder $builder, $find)
@@ -61,10 +63,10 @@ trait Cacher
     /**
      * 
      * @param \Illuminate\Database\Query\Builder $builder
-     * @param int $ttl | default 1 week
+     * @param int                                $ttl | default 1 week
      * @return \Illuminate\Contracts\Cache\Repository
      */
-    public function scopeFirstAndRemember(Builder $builder, $find, int $ttl = 86400*7)
+    public function scopeFirstAndRemember(Builder $builder, int $ttl = 86400*7)
     {
         return Cache::remember($this->prefix($builder), $ttl, function() use($builder, $find){
             return $builder->first($find);
@@ -76,7 +78,7 @@ trait Cacher
      * @param \Illuminate\Database\Query\Builder $builder
      * @return \Illuminate\Contracts\Cache\Repository
      */
-    public function scopeFirstAndRememberForever(Builder $builder, $find)
+    public function scopeFirstAndRememberForever(Builder $builder)
     {
         return Cache::rememberForever($this->prefix($builder), function() use($builder, $find){
             return $builder->first($find);
