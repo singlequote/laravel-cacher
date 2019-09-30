@@ -68,8 +68,8 @@ trait Cacher
      */
     public function scopeFirstAndRemember(Builder $builder, int $ttl = 86400*7)
     {
-        return Cache::remember($this->prefix($builder), $ttl, function() use($builder, $find){
-            return $builder->first($find);
+        return Cache::remember($this->prefix($builder), $ttl, function() use($builder){
+            return $builder->first();
         });
     }
         
@@ -80,8 +80,8 @@ trait Cacher
      */
     public function scopeFirstAndRememberForever(Builder $builder)
     {
-        return Cache::rememberForever($this->prefix($builder), function() use($builder, $find){
-            return $builder->first($find);
+        return Cache::rememberForever($this->prefix($builder), function() use($builder){
+            return $builder->first();
         });
     }
     
