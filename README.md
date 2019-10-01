@@ -24,7 +24,7 @@ use SingleQuote\Cacher\Traits\Cacher; //⇐ this one
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-	use Cacher; //<=  require the model to use the trait
+    use Cacher; //<=  require the model to use the trait
 }
 ```
 
