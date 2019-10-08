@@ -92,9 +92,11 @@ trait Cacher
      * @param string $prefix
      * @return Builder
      */
-    public function scopePrefix(Builder $builder, string $prefix)
+    public function scopePrefix(Builder $builder, string $prefix = null)
     {
-        $this->prefix = $prefix;
+        if(!$prefix || strlen($prefix) > 0){
+            $this->prefix = $prefix;
+        }
         
         return $builder;
     }
