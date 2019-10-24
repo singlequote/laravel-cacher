@@ -84,6 +84,31 @@ trait Cacher
             return $builder->first();
         });
     }
+        
+    /**
+     * 
+     * @param \Illuminate\Database\Query\Builder $builder
+     * @param int                                $ttl | default 1 week
+     * @return \Illuminate\Contracts\Cache\Repository
+     */
+    public function scopeRememberCount(Builder $builder, int $ttl = 86400*7)
+    {
+        return Cache::remember($this->prefix($builder), $ttl, function() use($builder){
+            return $builder->count();
+        });
+    }
+    
+    /**
+     * 
+     * @param \Illuminate\Database\Query\Builder $builder
+     * @return \Illuminate\Contracts\Cache\Repository
+     */
+    public function scopeRememberCountForever(Builder $builder)
+    {
+        return Cache::rememberForever($this->prefix($builder), function() use($builder){
+            return $builder->count();
+        });
+    }
     
     /**
      * Set the prefix for the cacher
