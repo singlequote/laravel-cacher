@@ -123,6 +123,18 @@ trait Cacher
     }
     
     /**
+     * 
+     * @param \Illuminate\Database\Query\Builder $builder
+     * @return \Illuminate\Contracts\Cache\Repository
+     */
+    public function scopePaginateAndRememberForever(Builder $builder, int $count = null)
+    {
+        return Cache::rememberForever($this->prefix($builder), function() use($builder, $count){
+            return $builder->paginate($count);
+        });
+    }
+    
+    /**
      * Set the prefix for the cacher
      * 
      * @param Builder $builder
