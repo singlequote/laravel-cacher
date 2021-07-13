@@ -9,7 +9,7 @@
     ],
     "homepage": "https://github.com/singlequote/laravel-cacher",
     "license": "MIT",
-    "version": "0.0.9",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Wim Pruiksma",
@@ -19,8 +19,8 @@
         }
     ],
     "require": {
-        "php": "^7.0",
-        "laravel/framework": ">=5"
+        "php": "^8.0",
+        "laravel/framework": ">=8"
     },
     "require-dev": {
         
